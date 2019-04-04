@@ -7,11 +7,9 @@ declare module 'react-native-gesture-handler' {
     Animated,
     FlatListProperties,
     ScrollViewProperties,
-    SliderProperties,
     SwitchProperties,
     TextInputProperties,
     ToolbarAndroidProperties,
-    ViewPagerAndroidProperties,
     DrawerLayoutAndroidProperties,
     TouchableHighlightProperties,
     TouchableOpacityProperties,
@@ -409,10 +407,6 @@ declare module 'react-native-gesture-handler' {
     NativeViewGestureHandlerProperties & ScrollViewProperties
   > {}
 
-  export class Slider extends React.Component<
-    NativeViewGestureHandlerProperties & SliderProperties
-  > {}
-
   export class Switch extends React.Component<
     NativeViewGestureHandlerProperties & SwitchProperties
   > {}
@@ -423,10 +417,6 @@ declare module 'react-native-gesture-handler' {
 
   export class ToolbarAndroid extends React.Component<
     NativeViewGestureHandlerProperties & ToolbarAndroidProperties
-  > {}
-
-  export class ViewPagerAndroid extends React.Component<
-    NativeViewGestureHandlerProperties & ViewPagerAndroidProperties
   > {}
 
   export class DrawerLayoutAndroid extends React.Component<
@@ -442,6 +432,11 @@ declare module 'react-native-gesture-handler' {
   export function gestureHandlerRootHOC(
     Component: React.ComponentType<any>,
     containerStyles?: StyleProp<ViewStyle>
+  ): React.ComponentType<any>;
+
+  export function createNativeWrapper(
+    Component: React.ComponentType<any>,
+    config: NativeViewGestureHandlerProperties
   ): React.ComponentType<any>;
 }
 
@@ -464,12 +459,12 @@ declare module 'react-native-gesture-handler/Swipeable' {
     onSwipeableWillOpen?: () => void;
     onSwipeableWillClose?: () => void;
     renderLeftActions?: (
-      progressAnimatedValue: Animated.Value,
-      dragAnimatedValue: Animated.Value
+      progressAnimatedValue: Animated.Value | Animated.AnimatedInterpolation,
+      dragAnimatedValue: Animated.AnimatedInterpolation
     ) => React.ReactNode;
     renderRightActions?: (
-      progressAnimatedValue: Animated.Value,
-      dragAnimatedValue: Animated.Value
+      progressAnimatedValue: Animated.Value | Animated.AnimatedInterpolation,
+      dragAnimatedValue: Animated.AnimatedInterpolation
     ) => React.ReactNode;
     useNativeAnimations?: boolean;
   }
@@ -482,7 +477,7 @@ declare module 'react-native-gesture-handler/Swipeable' {
 }
 
 declare module 'react-native-gesture-handler/DrawerLayout' {
-  import { Animated, StatusBarAnimation } from 'react-native';
+  import { Animated, StatusBarAnimation, StyleProp, ViewStyle } from 'react-native';
 
   interface DrawerLayoutProperties {
     renderNavigationView: (
