@@ -225,6 +225,22 @@ declare module 'react-native-gesture-handler' {
           bottom?: number;
           vertical?: number;
           horizontal?: number;
+        }
+      | {
+          width: number;
+          left: number;
+        }
+      | {
+          width: number;
+          right: number;
+        }
+      | {
+          height: number;
+          top: number;
+        }
+      | {
+          height: number;
+          bottom: number;
         };
   }
 
@@ -362,6 +378,7 @@ declare module 'react-native-gesture-handler' {
     onPress?: (pointerInside: boolean) => void;
     onActiveStateChange?: (active: boolean) => void;
     style?: StyleProp<ViewStyle>;
+    rippleColor?: string;
   }
 
   export interface RectButtonProperties extends BaseButtonProperties {
@@ -371,6 +388,7 @@ declare module 'react-native-gesture-handler' {
 
   export interface BorderlessButtonProperties extends BaseButtonProperties {
     borderless?: boolean;
+    activeOpacity?: number;
   }
 
   /* BUTTONS CLASSES */
@@ -425,8 +443,8 @@ declare module 'react-native-gesture-handler' {
 
   /* OTHER */
 
-  export class FlatList extends React.Component<
-    NativeViewGestureHandlerProperties & FlatListProperties<any>
+  export class FlatList<ItemT> extends React.Component<
+    NativeViewGestureHandlerProperties & FlatListProperties<ItemT>
   > {}
 
   export function gestureHandlerRootHOC(
@@ -441,7 +459,7 @@ declare module 'react-native-gesture-handler' {
 }
 
 declare module 'react-native-gesture-handler/Swipeable' {
-  import { Animated } from 'react-native';
+  import { Animated, StyleProp, ViewStyle } from 'react-native';
 
   interface SwipeableProperties {
     friction?: number;
@@ -467,6 +485,8 @@ declare module 'react-native-gesture-handler/Swipeable' {
       dragAnimatedValue: Animated.AnimatedInterpolation
     ) => React.ReactNode;
     useNativeAnimations?: boolean;
+    containerStyle?: StyleProp<ViewStyle>;
+    childrenContainerStyle?: StyleProp<ViewStyle>;
   }
 
   export default class Swipeable extends React.Component<SwipeableProperties> {
@@ -479,23 +499,34 @@ declare module 'react-native-gesture-handler/Swipeable' {
 declare module 'react-native-gesture-handler/DrawerLayout' {
   import { Animated, StatusBarAnimation, StyleProp, ViewStyle } from 'react-native';
 
-  interface DrawerLayoutProperties {
+  export type DrawerPosition = 'left' | 'right';
+
+  export type DrawerState = 'Idle' | 'Dragging' | 'Settling';
+
+  export type DrawerType = 'front' | 'back' | 'slide';
+
+  export type DrawerLockMode = 'unlocked' | 'locked-closed' | 'locked-open';
+
+  export type DrawerKeyboardDismissMode = 'none' | 'on-drag';
+
+  export interface DrawerLayoutProperties {
     renderNavigationView: (
       progressAnimatedValue: Animated.Value
     ) => React.ReactNode;
-    drawerPosition?: 'left' | 'right';
+    drawerPosition?: DrawerPosition;
     drawerWidth?: number;
     drawerBackgroundColor?: string;
-    keyboardDismissMode?: 'none' | 'on-drag';
+    drawerLockMode?: DrawerLockMode;
+    keyboardDismissMode?: DrawerKeyboardDismissMode;
     onDrawerClose?: () => void;
     onDrawerOpen?: () => void;
     onDrawerStateChanged?: (
-      newState: 'Idle' | 'Dragging' | 'Settling',
+      newState: DrawerState,
       drawerWillShow: boolean
     ) => void;
     useNativeAnimations?: boolean;
 
-    drawerType?: 'front' | 'back' | 'slide';
+    drawerType?: DrawerType;
     edgeWidth?: number;
     minSwipeDistance?: number;
     hideStatusBar?: boolean;
